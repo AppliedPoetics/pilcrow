@@ -36,12 +36,13 @@ pub fn bind()
     if let Some(addr) = get_addr() {
       let sock = addr;
       listener = TcpListener::bind(
-        (addr,8080)
+        (addr,1848)
       ).unwrap();
+      println!("Server started at: {:?}",listener);
       return listener;
     }
     listener = TcpListener::bind(
-      ("127.0.0.1",8080)
+      ("127.0.0.1",1848)
     ).unwrap();
     listener
   }

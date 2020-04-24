@@ -1,3 +1,5 @@
+#[path = "networking/clients.rs"] mod clients;
+#[path = "networking/comm.rs"] mod comm;
 #[path = "networking/tcp.rs"] mod tcp;
 
 use std::io::Read;
@@ -15,8 +17,8 @@ fn main() {
         thread::spawn(|| {
           let mut buf = String::new();
           let mut stream = stream.unwrap();
+          clients::new_client(stream.peer_addr().unwrap());
           stream.read_to_string(&mut buf);
-          
         });
       }
     },
