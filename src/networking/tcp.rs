@@ -1,8 +1,6 @@
-use std::io::Write;
 use std::net::{IpAddr, Ipv4Addr};
-use std::net::{SocketAddr, TcpListener, TcpStream};
+use std::net::{SocketAddr, TcpListener};
 use std::process::Command;
-use std::thread;
 
 fn get_addr() 
   -> Option<IpAddr> {
@@ -32,22 +30,18 @@ fn get_addr()
     None
   }
 
-pub fn bind() {
+pub fn bind() 
+  -> TcpListener {
+    let listener;
     if let Some(addr) = get_addr() {
       let sock = addr;
-      let listener = TcpListener::bind(
+      listener = TcpListener::bind(
         (addr,8080)
       ).unwrap();
-      match listener {
-        listener => {
-          for stream in listener.incoming() {
-            thread::spawn(|| {
-              let mut stream = stream.unwrap();
-              stream.write(b"!").unwrap();
-            });
-          }
-        },
-        _ => println!("Error starting listener"),
-      }
+      return listener;
     }
+    listener = TcpListener::bind(
+      ("127.0.0.1",8080)
+    ).unwrap();
+    listener
   }
