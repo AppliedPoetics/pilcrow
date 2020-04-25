@@ -26,8 +26,8 @@ fn add_client(addr: SocketAddr) {
   if map.is_empty() {
     map.insert(1,client);
   } else {
-    let clients = map.len();
-    map.insert(clients + 1,client);
+    let next_id = map.len() + 1;
+    map.insert(next_id,client);
   }
   println!("{}",map.len());
 }
