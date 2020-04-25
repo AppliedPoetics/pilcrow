@@ -1,11 +1,11 @@
 #[path = "blocks/block.rs"] mod block;
-
+#[path = "blocks/chain.rs"] mod chain;
 #[path = "networking/clients.rs"] mod clients;
 #[path = "networking/tcp.rs"] mod tcp;
 
 use std::io::Read;
 use std::io::Write;
-use std::net::{TcpListener, TcpStream};
+use std::net::{Shutdown, TcpListener, TcpStream};
 use std::thread;
 use std::sync::mpsc;
 use std::sync::mpsc::{Sender, Receiver};
@@ -26,11 +26,12 @@ fn main() {
           let mut data = [0 as u8; 50];
           while match stream.read(&mut data) {
             Ok(size) => {
-              block::make_block(None, None, None);
+              let block = block::make_block(None, None, None);
+              chain::add_block(block);
               true
             },
             Err(_) => {
-              println!("ERRRRR");
+              stream.shutdown(Shutdown::Both).unwrap();
               false
             }
           }{}

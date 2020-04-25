@@ -32,6 +32,7 @@ fn calculate_hash(block: &Block)
 pub fn make_block(previous: Option<Block>, text: Option<String>, staker: Option<String>) 
   -> Block {
     let block;
+    // Get previous block or generate genesis block
     let previous: Block = previous
       .unwrap_or(
         Block {
@@ -51,6 +52,5 @@ pub fn make_block(previous: Option<Block>, text: Option<String>, staker: Option<
       prev_hash: previous.hash,
       staker: staker.unwrap_or("".to_string()),
     };
-    println!("{:?}",block);
     block
   }
