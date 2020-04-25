@@ -29,7 +29,6 @@ fn add_client(addr: SocketAddr) {
     let next_id = map.len() + 1;
     map.insert(next_id,client);
   }
-  println!("{}",map.len());
 }
 
 pub fn new_client(addr: SocketAddr) {

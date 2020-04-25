@@ -23,7 +23,17 @@ fn main() {
               .peer_addr()
               .unwrap()
           );
-          stream.read_to_string(&mut buf);
+          let mut data = [0 as u8; 50];
+          while match stream.read(&mut data) {
+            Ok(size) => {
+              block::make_block(None, None, None);
+              true
+            },
+            Err(_) => {
+              println!("ERRRRR");
+              false
+            }
+          }{}
         });
       }
     },

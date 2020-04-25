@@ -13,6 +13,13 @@ pub struct Block {
   staker: String
 }
 
+fn get_time_now() 
+  -> String {
+    let system_time = SystemTime::now();
+    let date_time: DateTime<Utc> = system_time.into();
+    date_time.format("%d-%m-%Y %T").to_string()
+  }
+
 fn calculate_hash(block: &Block) 
   -> String {
     let mut hash =  block.num.to_string();
@@ -22,19 +29,28 @@ fn calculate_hash(block: &Block)
     hash.to_string()
   }
 
-pub fn make_block(previous: Block, text: String, staker: String) 
+pub fn make_block(previous: Option<Block>, text: Option<String>, staker: Option<String>) 
   -> Block {
-  let block;
-  let system_time = SystemTime::now();
-  let date_time: DateTime<Utc> = system_time.into();
-  block = Block {
-    num: 0,
-    time: date_time.format("%d-%m-%Y %t").to_string(),
-    text: text,
-    hash: calculate_hash(&previous),
-    prev_hash: previous.hash,
-    staker: staker,
-  };
-  println!("{:?}",block);
-  block
-}
+    let block;
+    let previous: Block = previous
+      .unwrap_or(
+        Block {
+          num: 0,
+          time: get_time_now(),
+          text: String::new(),
+          hash: String::new(),
+          prev_hash: String::new(),
+          staker: String::new(),
+        }
+      );
+    block = Block {
+      num: 0,
+      time: get_time_now(),
+      text: text.unwrap_or("".to_string()),
+      hash: calculate_hash(&previous),
+      prev_hash: previous.hash,
+      staker: staker.unwrap_or("".to_string()),
+    };
+    println!("{:?}",block);
+    block
+  }
