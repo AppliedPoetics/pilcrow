@@ -24,10 +24,13 @@ fn main() {
               .unwrap()
           );
           let mut data = [0 as u8; 50];
+          let mut latest_block = Some(block::make_block(None, None, None));
           while match stream.read(&mut data) {
             Ok(size) => {
-              let block = block::make_block(None, None, None);
+              let block = block::make_block(latest_block, None, None);
               chain::add_block(block);
+              latest_block = Some(chain::get_latest_block());
+              println!("{:?}",&latest_block.clone().unwrap());
               true
             },
             Err(_) => {

@@ -1,11 +1,12 @@
+use crate::chain;
 use chrono::DateTime;
 use chrono::offset::Utc;
-use sha2::{Sha256};
+use sha2::{Sha256, Digest};
 use std::time::{SystemTime};
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Block {
-  num: u32,
+  num: usize,
   time: String,
   text: String,
   hash: String,
@@ -22,11 +23,18 @@ fn get_time_now()
 
 fn calculate_hash(block: &Block) 
   -> String {
-    let mut hash =  block.num.to_string();
-    hash.push_str(&block.time);
-    hash.push_str(&block.text);
-    hash.push_str(&block.prev_hash);
-    hash.to_string()
+    let mut hashed = String::new();
+    let mut hasher = Sha256::default();
+    let mut hashable =  block.num.to_string();
+    hashable.push_str(&block.time);
+    hashable.push_str(&block.text);
+    hashable.push_str(&block.prev_hash);
+    hasher.input(hashable);
+    let result = hasher.result();
+    for v in result.iter() {
+      hashed.push_str(&v.to_string());
+    }
+    hashed
   }
 
 pub fn make_block(previous: Option<Block>, text: Option<String>, staker: Option<String>) 
@@ -44,8 +52,9 @@ pub fn make_block(previous: Option<Block>, text: Option<String>, staker: Option<
           staker: String::new(),
         }
       );
+    let chain_len = chain::get_block_count();
     block = Block {
-      num: 0,
+      num: chain_len,
       time: get_time_now(),
       text: text.unwrap_or("".to_string()),
       hash: calculate_hash(&previous),
