@@ -2,9 +2,11 @@ use crate::chain;
 use chrono::DateTime;
 use chrono::offset::Utc;
 use sha2::{Sha256, Digest};
+use serde::{Serialize, Deserialize};
+use serde_json;
 use std::time::{SystemTime};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Block {
   num: usize,
   time: String,
@@ -49,10 +51,11 @@ pub fn make_block(previous: Option<Block>, text: Option<String>, staker: Option<
           text: String::new(),
           hash: String::new(),
           prev_hash: String::new(),
-          staker: String::new(),
+          staker: "Pilcrow Daemon".to_string(),
         }
       );
     let chain_len = chain::get_block_count();
+    // Generate next or genesis block
     block = Block {
       num: chain_len,
       time: get_time_now(),

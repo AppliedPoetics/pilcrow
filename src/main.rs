@@ -1,5 +1,6 @@
 #[path = "blocks/block.rs"] mod block;
 #[path = "blocks/chain.rs"] mod chain;
+#[path = "comm/convert.rs"] mod convert;
 #[path = "networking/clients.rs"] mod clients;
 #[path = "networking/tcp.rs"] mod tcp;
 
@@ -16,7 +17,6 @@ fn main() {
     listener => {
       for stream in listener.incoming() {
         thread::spawn(|| {
-          let mut buf = String::new();
           let mut stream = stream.unwrap();
           clients::new_client(
             stream
@@ -30,7 +30,11 @@ fn main() {
               let block = block::make_block(latest_block, None, None);
               chain::add_block(block);
               latest_block = Some(chain::get_latest_block());
-              println!("{:?}",&latest_block.clone().unwrap());
+              let unwrapped_block = &latest_block
+                .clone()
+                .unwrap();
+              let transmit_block = convert::block_to_json(unwrapped_block);
+              stream.write(&transmit_block.into_bytes());
               true
             },
             Err(_) => {
