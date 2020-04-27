@@ -2,22 +2,28 @@ use crate::block;
 
 use serde::{Serialize, Deserialize};
 use serde_json;
-
-pub unsafe fn block_as_u8_slice<T: Sized>(p: &T)
-  -> &[u8] {
-    ::std::slice::from_raw_parts(
-      (p as *const T) as *const u8,
-      ::std::mem::size_of::<T>(),
-    )
-  }
   
 pub fn data_from_u8(data: &[u8;50])
   -> String {
     let s = match std::str::from_utf8(data) {
-      Ok(v) => v,
+      Ok(v) => {
+        let mut _v = String::from(v);
+        for c in String::from(v).chars() {
+          if c.is_control() {
+            _v.pop();
+          }
+        }
+        if _v.ends_with('\n') {
+          _v.pop();
+        }
+        if _v.ends_with('\r') {
+          _v.pop();
+        }
+        String::from(_v.trim_end())
+      },
       Err(why) => panic!("Everybody panic!"),
     };
-    s.to_string()
+    String::from(s)
   }
   
 pub fn block_to_json(block: &block::Block)
