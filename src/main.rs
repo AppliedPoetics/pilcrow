@@ -2,7 +2,9 @@
 #[path = "blocks/chain.rs"] mod chain;
 #[path = "comm/convert.rs"] mod convert;
 #[path = "comm/messages.rs"] mod messages;
+#[path = "comm/router.rs"] mod router;
 #[path = "fs/fs.rs"] mod file;
+#[path = "ops/clock.rs"] mod clock;
 #[path = "networking/clients.rs"] mod clients;
 #[path = "networking/tcp.rs"] mod tcp;
 
@@ -27,17 +29,17 @@ fn main() {
           );
           let mut data = [0 as u8; 50];
           
-          let mut latest_block = Some(block::make_block(None, None, None));
+          let mut next_block = block::Block::new();
+          next_block.create();
           
           while match stream.read(&mut data) {
             Ok(size) => {
               let msg = messages::interpret(data);
-              let block = block::make_block(latest_block, None, None);
-              chain::add_block(block);
-              latest_block = Some(chain::get_latest_block());
-              let unwrapped_block = &latest_block
-                .clone()
-                .unwrap();
+              let mut block = block::Block::new();
+              chain::add_block(block.create());
+              next_block = chain::get_latest_block();
+              let unwrapped_block = &next_block
+                .clone();
               let transmit_block = convert::block_to_json(unwrapped_block);
               stream.write(
                 &transmit_block

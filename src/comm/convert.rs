@@ -13,12 +13,6 @@ pub fn data_from_u8(data: &[u8;50])
             _v.pop();
           }
         }
-        if _v.ends_with('\n') {
-          _v.pop();
-        }
-        if _v.ends_with('\r') {
-          _v.pop();
-        }
         String::from(_v.trim_end())
       },
       Err(why) => panic!("Everybody panic!"),
