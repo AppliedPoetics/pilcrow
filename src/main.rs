@@ -40,6 +40,7 @@ fn main() {
               let msg = messages::interpret(data);
               
               let mut block = block::Block::new(Some(next_block));
+              block.calc_hash();
               
               chain::add_block(block);
               

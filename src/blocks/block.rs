@@ -11,39 +11,37 @@ pub struct Block {
   text: String,
   hash: String,
   prev_hash: String,
-  staker: String
+  staker: String,
 }
 
-fn calculate_hash(block: &Block) 
-  -> String {
-    let mut hashed = String::new();
-    let mut hasher = Sha256::default();
-    let mut hashable =  block.num.to_string();
-    hashable.push_str(&block.time);
-    hashable.push_str(&block.text);
-    hashable.push_str(&block.prev_hash);
-    hasher.input(hashable);
-    let result = hasher.result();
-    for v in result.iter() {
-      hashed.push_str(&v.to_string());
-    }
-    hashed
-  }
-
-//pub fn make_block(previous: Option<Block>, text: Option<String>, staker: Option<String>) 
-
 impl Block {
-  
   pub fn new(previous: Option<Block>) 
     -> Block {
-      let prev = previous.unwrap();
       Block {
         num: chain::get_block_count(),
         time: clock::get_time_now(),
         text: String::new(),
         hash: String::new(),
-        prev_hash: prev.hash,
+        prev_hash: match previous {
+          Some(block) => block.hash,
+          _ => String::new(),
+        },
         staker: String::new(),
       }
     }
+
+  pub fn calc_hash(&mut self) {
+    let mut hashed = String::new();
+    let mut hasher = Sha256::default();
+    let mut hashable =  self.num.to_string();
+    hashable.push_str(&self.time);
+    hashable.push_str(&self.text);
+    hashable.push_str(&self.prev_hash);
+    hasher.input(hashable);
+    let result = hasher.result();
+    for v in result.iter() {
+      hashed.push_str(&v.to_string());
+    }
+    self.hash = hashed;
+  }
 }
