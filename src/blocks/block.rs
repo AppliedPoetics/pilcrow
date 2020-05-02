@@ -34,21 +34,16 @@ fn calculate_hash(block: &Block)
 
 impl Block {
   
-  pub fn new() 
+  pub fn new(previous: Option<Block>) 
     -> Block {
+      let prev = previous.unwrap();
       Block {
         num: chain::get_block_count(),
         time: clock::get_time_now(),
         text: String::new(),
         hash: String::new(),
-        prev_hash: String::new(),
+        prev_hash: prev.hash,
         staker: String::new(),
       }
-    }
-    
-  pub fn create(mut self)
-    -> Block {
-      self.hash = calculate_hash(&self);
-      self
     }
 }

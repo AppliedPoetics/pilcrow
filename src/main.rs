@@ -21,36 +21,49 @@ fn main() {
     listener => {
       for stream in listener.incoming() {
         thread::spawn(|| {
+          
           let mut stream = stream.unwrap();
+          
           clients::new_client(
             stream
               .peer_addr()
               .unwrap()
           );
+          
           let mut data = [0 as u8; 50];
           
-          let mut next_block = block::Block::new();
-          next_block.create();
+          let mut next_block = block::Block::new(None);
           
           while match stream.read(&mut data) {
             Ok(size) => {
+            
               let msg = messages::interpret(data);
-              let mut block = block::Block::new();
-              chain::add_block(block.create());
+              
+              let mut block = block::Block::new(Some(next_block));
+              
+              chain::add_block(block);
+              
               next_block = chain::get_latest_block();
+              
               let unwrapped_block = &next_block
                 .clone();
+              
               let transmit_block = convert::block_to_json(unwrapped_block);
+              
               stream.write(
                 &transmit_block
                   .clone()
                   .into_bytes()
               );
+              
               file::write_chain_to_disk();
+              
               true
             },
             Err(_) => {
+              
               stream.shutdown(Shutdown::Both).unwrap();
+              
               false
             }
           }{}
