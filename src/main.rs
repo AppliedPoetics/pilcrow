@@ -17,6 +17,7 @@ use std::sync::mpsc;
 use std::sync::mpsc::{Sender, Receiver};
 
 fn main() {
+  file::read_chain_from_disk();
   let listener = tcp::bind();
   match listener {
     listener => {
@@ -32,9 +33,15 @@ fn main() {
           );
           
           let mut data = [0 as u8; 50];
-          
-          let mut next_block = block::Block::new(None);
-          
+
+          let mut next_block;
+
+          if chain::get_block_count() < 1 {
+            next_block = block::Block::new(None);
+          } else {
+            next_block = chain::get_latest_block();
+          }
+
           while match stream.read(&mut data) {
             Ok(size) => {
             

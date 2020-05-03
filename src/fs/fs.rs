@@ -3,6 +3,7 @@ use crate::convert;
 use std::error::Error;
 use std::fs::File;
 use std::fs::OpenOptions;
+use std::io::{BufRead, BufReader};
 use std::io::prelude::*;
 use std::path::Path;
 
@@ -17,4 +18,14 @@ pub fn write_chain_to_disk() {
 }
 
 pub fn read_chain_from_disk() {
+  let mut file = OpenOptions::new()
+    .read(true)
+    .open("data/chain.json")
+    .unwrap();
+  let reader = BufReader::new(file);
+  for block in reader.lines() {
+    chain::add_block(
+      convert::json_to_block(&block.unwrap())
+    );
+  }
 }

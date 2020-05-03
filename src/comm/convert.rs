@@ -1,7 +1,8 @@
 use crate::block;
+use crate::chain;
 
 use serde::{Serialize, Deserialize};
-use serde_json;
+use serde_json::*;
   
 pub fn data_from_u8(data: &[u8;50])
   -> String {
@@ -26,8 +27,20 @@ pub fn block_to_json(block: &block::Block)
     json.unwrap()
   }
   
-pub fn json_to_block(block: &String)
-  -> String {
-    let json = serde_json::from_str(block);
-    json.unwrap()
+pub fn json_to_block(line: &String)
+  -> block::Block {
+    let json: Value = serde_json::from_str(line)
+      .unwrap();
+    let number = json["num"]
+      .as_u64()
+      .unwrap();
+    let block = block::Block {
+      num: number as usize,
+      time: json["time"].to_string(),
+      text: json["text"].to_string(),
+      hash: json["hash"].to_string(),
+      prev_hash: json["prev_hash"].to_string(),
+      staker: json["staker"].to_string(),
+    };
+    block
   }

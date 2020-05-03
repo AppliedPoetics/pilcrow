@@ -6,12 +6,12 @@ use serde_json;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Block {
-  num: usize,
-  time: String,
-  text: String,
-  hash: String,
-  prev_hash: String,
-  staker: String,
+  pub num: usize,
+  pub time: String,
+  pub text: String,
+  pub hash: String,
+  pub prev_hash: String,
+  pub staker: String,
 }
 
 impl Block {
