@@ -23,7 +23,10 @@ impl Block {
         text: String::new(),
         hash: String::new(),
         prev_hash: match previous {
-          Some(block) => block.hash,
+          Some(block) => {
+            let hash: &str = &*block.hash;
+            String::from(hash)
+          },
           _ => String::new(),
         },
         staker: String::new(),
