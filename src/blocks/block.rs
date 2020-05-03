@@ -29,6 +29,20 @@ impl Block {
         staker: String::new(),
       }
     }
+    
+  pub fn set_text(&mut self, text: Option<String>) {
+    self.text = match text {
+      Some(entry) => entry,
+      _ => String::new(),
+    };
+  }
+  
+  pub fn set_staker(&mut self, staker: Option<String>) {
+    self.staker = match staker {
+      Some(writer) => writer,
+      _ => String::from("pilcrowd"),
+    };
+  }
 
   pub fn calc_hash(&mut self) {
     let mut hashed = String::new();

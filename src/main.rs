@@ -2,6 +2,7 @@
 #[path = "blocks/chain.rs"] mod chain;
 #[path = "comm/convert.rs"] mod convert;
 #[path = "comm/messages.rs"] mod messages;
+#[path = "comm/packets.rs"] mod packets;
 #[path = "comm/router.rs"] mod router;
 #[path = "fs/fs.rs"] mod file;
 #[path = "ops/clock.rs"] mod clock;

@@ -1,8 +1,7 @@
-use crate::messages;
+use crate::packets;
 use serde::{Serialize, Deserialize};
 use serde_json::*;
 
-pub fn route(incoming: &messages::Incoming) {
-    let purpose = &incoming.purpose;
-    println!("{}",purpose);
+pub fn route(incoming: &packets::Incoming) {
+    
   }

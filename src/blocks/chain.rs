@@ -9,6 +9,14 @@ lazy_static! {
   };
 }
 
+pub fn get_whole_chain()
+  -> Vec<block::Block> {
+    let chain = &BLOCKCHAIN
+      .lock()
+      .unwrap();
+    chain.to_vec()
+  }
+
 pub fn get_latest_block()
   -> block::Block {
     let chain = &BLOCKCHAIN;
