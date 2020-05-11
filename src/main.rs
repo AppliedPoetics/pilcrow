@@ -1,5 +1,6 @@
 #[path = "blocks/block.rs"] mod block;
 #[path = "blocks/chain.rs"] mod chain;
+#[path = "blocks/census.rs"] mod census;
 #[path = "comm/convert.rs"] mod convert;
 #[path = "comm/messages.rs"] mod messages;
 #[path = "comm/packets.rs"] mod packets;
@@ -23,7 +24,7 @@ fn main() {
     listener => {
       for stream in listener.incoming() {
         thread::spawn(|| {
-          
+          // This only broadcasts to streams once data arrives
           let mut stream = stream.unwrap();
           
           clients::new_client(
@@ -46,6 +47,8 @@ fn main() {
             Ok(size) => {
             
               let msg = messages::interpret(data);
+              
+              census::validate();
               
               let mut block = block::Block::new(Some(next_block));
               block.calc_hash();

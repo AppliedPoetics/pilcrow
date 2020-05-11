@@ -15,6 +15,7 @@ pub struct Block {
 }
 
 impl Block {
+  
   pub fn new(previous: Option<Block>) 
     -> Block {
       Block {
