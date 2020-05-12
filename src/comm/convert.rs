@@ -1,9 +1,9 @@
 use crate::block;
 use crate::chain;
-
+use crate::packets;
 use serde::{Serialize, Deserialize};
-use serde_json::*;
-  
+use serde_json::*; 
+
 pub fn data_from_u8(data: &[u8;50])
   -> String {
     let s = match std::str::from_utf8(data) {
@@ -19,6 +19,12 @@ pub fn data_from_u8(data: &[u8;50])
       Err(why) => panic!("Everybody panic!"),
     };
     String::from(s)
+  }
+  
+pub fn data_to_json(data: &packets::Incoming) 
+  -> String {
+    let json = serde_json::to_string(data);
+    json.unwrap()
   }
   
 pub fn block_to_json(block: &block::Block)

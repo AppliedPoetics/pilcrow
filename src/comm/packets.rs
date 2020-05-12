@@ -3,6 +3,7 @@ use crate::chain;
 use crate::clock;
 use serde::{Serialize, Deserialize};
 
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Incoming {
   pub purpose: String,
   pub time: String,

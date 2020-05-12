@@ -10,8 +10,7 @@
 #[path = "networking/clients.rs"] mod clients;
 #[path = "networking/tcp.rs"] mod tcp;
 
-use std::io::Read;
-use std::io::Write;
+use std::io::{Read, Write};
 use std::net::{Shutdown, TcpListener, TcpStream};
 use std::thread;
 use std::sync::mpsc;

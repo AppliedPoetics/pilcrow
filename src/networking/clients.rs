@@ -31,6 +31,20 @@ fn add_client(addr: SocketAddr) {
   }
 }
 
+pub fn get_client_list() 
+  -> Vec<String> {
+  let clients = &CLIENTS
+    .lock()
+    .unwrap();
+  let mut list: Vec<String> = Vec::with_capacity(clients.len());
+  for (id, client) in clients.iter() {
+    list.push(client.ip
+      .to_string()
+    );
+  }
+  list
+}
+
 pub fn new_client(addr: SocketAddr) {
   println!("Connection from: {}",addr);
   add_client(addr);
