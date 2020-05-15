@@ -12,6 +12,7 @@
 #[path = "networking/clients.rs"] mod clients;
 #[path = "networking/tcp.rs"] mod tcp;
 
+use cpython::{PyObject};
 use std::io::{Read, Write};
 use std::net::{Shutdown, TcpListener, TcpStream};
 use std::thread;
@@ -28,8 +29,8 @@ fn main() {
           // This only broadcasts to streams once data arrives
           let mut stream = stream.unwrap();
           
-          spacy::init();
-          spacy::get_instance();
+          let model = spacy::init();
+          spacy::get_instance(model);
           
           clients::new_client(
             stream

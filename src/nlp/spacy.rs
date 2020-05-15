@@ -15,20 +15,21 @@ lazy_static! {
   };
 }
 
-pub fn init() {
-  let spacy = SPACY
-    .lock()
-    .unwrap();
-  let gil = cpython::Python::acquire_gil();
-  let python = gil.python();
-  println!("Loading spacy...");
-  let modeled = spacy.call(python, "load", ("en_core_web_lg",), None)
-    .unwrap();
-  println!("Now we have: {:?}",modeled);
-  println!("Calling instance...");
-}
+pub fn init()
+  -> cpython::PyObject {
+    let spacy = SPACY
+      .lock()
+      .unwrap();
+    let gil = cpython::Python::acquire_gil();
+    let python = gil.python();
+    println!("Loading spacy...");
+    // This resolves as an object; need to store it to call it --> nlp("")
+    let modeled = spacy.call(python, "load", ("en_core_web_lg",), None)
+      .unwrap();
+    modeled
+  }
 
-pub fn get_instance() 
+pub fn get_instance(model: cpython::PyObject) 
   {//-> cpython::PyObject {
     let gil = cpython::Python::acquire_gil();
     let python = gil.python();
@@ -37,7 +38,10 @@ pub fn get_instance()
       .lock()
       .unwrap();
     println!("Calling instance...");
-    let result = instance.call(python,"nlp", ("What",), None);
+    let result = model.call(python, ("What",), None).unwrap();
+    let result2 = model.call(python, ("nope",), None).unwrap();
     println!("Should be a result here...");
     println!("{:?}",result);
+    println!("And other here...");
+    println!("{:?}",result.call_method(python,"similarity",(result2,),None));
   }
