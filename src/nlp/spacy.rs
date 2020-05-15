@@ -30,18 +30,14 @@ pub fn init()
   }
 
 pub fn get_instance(model: cpython::PyObject) 
-  {//-> cpython::PyObject {
+  -> f64 {
     let gil = cpython::Python::acquire_gil();
     let python = gil.python();
-    println!("Reacquiring spacy...");
     let instance = SPACY
       .lock()
       .unwrap();
-    println!("Calling instance...");
     let result = model.call(python, ("What",), None).unwrap();
     let result2 = model.call(python, ("nope",), None).unwrap();
-    println!("Should be a result here...");
-    println!("{:?}",result);
-    println!("And other here...");
-    println!("{:?}",result.call_method(python,"similarity",(result2,),None));
+    let sim = result.call_method(python,"similarity",(result2,),None);
+    cpython::FromPyObject::extract(python,&sim.unwrap()).unwrap()
   }
