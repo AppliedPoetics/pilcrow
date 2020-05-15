@@ -1,5 +1,6 @@
 use crate::block;
 use lazy_static::lazy_static;
+use std::collections::HashMap;
 use std::sync::Mutex;
 
 lazy_static! {

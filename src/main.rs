@@ -6,6 +6,8 @@
 #[path = "comm/packets.rs"] mod packets;
 #[path = "comm/router.rs"] mod router;
 #[path = "fs/fs.rs"] mod file;
+#[path = "nlp/spacy.rs"] mod spacy;
+#[path = "nlp/similarity.rs"] mod similarity;
 #[path = "ops/clock.rs"] mod clock;
 #[path = "networking/clients.rs"] mod clients;
 #[path = "networking/tcp.rs"] mod tcp;
@@ -25,6 +27,9 @@ fn main() {
         thread::spawn(|| {
           // This only broadcasts to streams once data arrives
           let mut stream = stream.unwrap();
+          
+          spacy::init();
+          spacy::get_instance();
           
           clients::new_client(
             stream
