@@ -5,6 +5,7 @@
 #[path = "comm/messages.rs"] mod messages;
 #[path = "comm/packets.rs"] mod packets;
 #[path = "comm/router.rs"] mod router;
+#[path = "corpus/corpus.rs"] mod corpus;
 #[path = "fs/fs.rs"] mod file;
 #[path = "nlp/spacy.rs"] mod spacy;
 #[path = "nlp/similarity.rs"] mod similarity;
@@ -32,6 +33,8 @@ fn main() {
           let model = spacy::init();
           spacy::get_instance(model);
           
+          corpus::select();
+
           clients::new_client(
             stream
               .peer_addr()
